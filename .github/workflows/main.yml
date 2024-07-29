@@ -1,0 +1,29 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Copy files via scp
+        run: scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa main.py ec2-user@${{ secrets.EC2_PUB_IP }}:/home/ec2-user/main.py
+
+      - name: Restart Uvicorn
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@${{ secrets.EC2_PUB_IP }} << 'EOF'
+          pkill uvicorn
+          nohup uvicorn main:app --host 0.0.0.0 --port 8000 &
+          EOF
