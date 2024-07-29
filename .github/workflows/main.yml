@@ -18,12 +18,19 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
+      - name: Add SSH key
+        run: echo "${{ secrets.EC2_SSH_KEY }}" | ssh-add -
+
       - name: Copy files via scp
-        run: scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa main.py ec2-user@${{ secrets.EC2_PUB_IP }}:/data001/LearningMate-Databricks-Backend/main.py
+        env:
+          EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
+        run: scp -o StrictHostKeyChecking=no main.py ec2-user@${{ secrets.EC2_PUB_IP }}:/data001/LearningMate-Databricks-Backend/main.py
 
       - name: Restart Uvicorn
+        env:
+          EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@${{ secrets.EC2_PUB_IP }} << 'EOF'
-          pkill uvicorn
-          nohup uvicorn main:app --host 0.0.0.0 --port 8000 &
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUB_IP }} << 'EOF'
+            pkill uvicorn || true
+            nohup uvicorn main:app --host 0.0.0.0 --port 8000 &
           EOF
