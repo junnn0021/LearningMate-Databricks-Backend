@@ -19,7 +19,7 @@ jobs:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Copy files via scp
-        run: scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa main.py ec2-user@${{ secrets.EC2_PUB_IP }}:/home/ec2-user/main.py
+        run: scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa main.py ec2-user@${{ secrets.EC2_PUB_IP }}:/data001/LearningMate-Databricks-Backend/main.py
 
       - name: Restart Uvicorn
         run: |
