@@ -34,5 +34,27 @@ jobs:
           EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
         shell: bash
 
-      - name: Copy files via scp
-        run: scp -o StrictHostKeyChecking=no main.py ec2-user@${{ secrets.EC2_PUB_IP }}:/
+      - name: Copy files to temp directory via scp
+        run: scp -o StrictHostKeyChecking=no main.py ec2-user@${{ secrets.EC2_PUB_IP }}:/home/ec2-user/main.py
+        env:
+          EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
+        shell: bash
+
+      - name: Move files to target directory with sudo
+        run: |
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUB_IP }} << 'EOF'
+            sudo mv /home/ec2-user/main.py /data001/LearningMate-Databricks-Backend/main.py
+          EOF
+        env:
+          EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
+        shell: bash
+
+      - name: Restart Uvicorn
+        run: |
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUB_IP }} << 'EOF'
+            sudo pkill uvicorn || true
+            sudo nohup uvicorn main:app --host 0.0.0.0 --port 8000 &
+          EOF
+        env:
+          EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
+        shell: bash
