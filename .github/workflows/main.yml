@@ -49,12 +49,12 @@ jobs:
           EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
         shell: bash
 
-      - name: Restart Uvicorn
-        run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUB_IP }} << 'EOF'
-            sudo pkill uvicorn || true
-            sudo nohup uvicorn main:app --host 0.0.0.0 --port 8000 &
-          EOF
-        env:
-          EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
-        shell: bash
+      # - name: Restart Uvicorn
+      #   run: |
+      #     ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUB_IP }} << 'EOF'
+      #       sudo pkill uvicorn || true
+      #       sudo nohup uvicorn main:app --host 0.0.0.0 --port 8000 &
+      #     EOF
+      #   env:
+      #     EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
+      #   shell: bash
