@@ -29,13 +29,13 @@ jobs:
         shell: bash
 
       - name: Test SSH connection
-        run: ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUB_IP }} "echo 'SSH connection successful'"
+        run: ssh -o StrictHostKeyChecking=yes ec2-user@${{ secrets.EC2_PUB_IP }} "echo 'SSH connection successful'"
         env:
           EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
         shell: bash
 
       - name: Copy files to temp directory via scp
-        run: scp -o StrictHostKeyChecking=no main.py ec2-user@${{ secrets.EC2_PUB_IP }}:/home/ec2-user/main.py
+        run: scp -o StrictHostKeyChecking=yes main.py ec2-user@${{ secrets.EC2_PUB_IP }}:/home/ec2-user/main.py
         env:
           EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
         shell: bash
