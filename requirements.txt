@@ -74,6 +74,7 @@ starlette==0.37.2
 support-info==1.0
 systemd-python==235
 typer==0.12.3
+typing==3.7.4.3
 typing_extensions==4.12.2
 urllib3==1.25.10
 uvicorn==0.30.3
