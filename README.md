@@ -1,6 +1,6 @@
 # LearningMate-Databricks-Backend
 ##### LearningMate-Databricks-Backend
-<br>
+
 <hr>
 
 ### 파이썬 프로젝트 환경 설정 가이드
