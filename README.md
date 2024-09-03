@@ -20,7 +20,7 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 ```
-##### 재시작 후, 원하는 파이썬 버전을 설치하세요.
+##### 재시작 후, 아래 파이썬 버전을 설치하세요.
 
 ```pyenv install 3.9.0```
 <hr>
