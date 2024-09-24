@@ -36,7 +36,7 @@ pyenv install 3.9.0
 pip install -r requirements.txt
 ```
 ##### 이 명령어를 통해 requirements.txt 파일 내에 정의된 패키지를 같은 버전으로 설치하여 버전 차이로 인한 오류를 방지합니다.
-##### requirements.txt 파일을 생성하려면 아래 명령어를 실행하세요.
+##### 패키지가 추가되어 requirements.txt 파일을 업데이트하려면 아래 명령어를 실행하세요.
 
 ```
 pip freeze > requirements.txt
