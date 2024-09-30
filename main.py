@@ -10,9 +10,13 @@ import os
 
 app = FastAPI()
 
-class Item(BaseModel):
+class NewTable(BaseModel):
     id: int
-    name: str
+    first_name: str
+    last_name: str
+    email: str
+    hire: date
+    job_title: str
 
     class Config:
         orm_mode = True
@@ -30,65 +34,67 @@ def get_db_connection():
 def read_root():
     return {"Hello": "Junseok World"}
 
-@app.get("/test")
-def test_db():
+@app.get("/new_table")
+def read_new_table():
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM new_table")
         result = cursor.fetchall()
         connection.close()
-        return JSONResponse(content={"message": "Database connection successful", "result": result})
+        return JSONResponse(content={"message": "New Table data", "result": result})
     except Exception as e:
         return JSONResponse(content={"message": "Error occurred", "error": str(e)}, status_code=500)
 
-@app.post("/items")
-async def create_item(item: Item):
+@app.post("/new_table")
+async def create_new_table(new_table: NewTable):
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
-        cursor.execute("INSERT INTO new_table (name) VALUES (%s)", (item.name,))
+        cursor.execute("INSERT INTO new_table (first_name, last_name, email, hire, job_title) VALUES (%s, %s, %s, %s, %s)", 
+                      (new_table.first_name, new_table.last_name, new_table.email, new_table.hire, new_table.job_title))
         connection.commit()
         connection.close()
-        return JSONResponse(content={"message": "Item created successfully"}, status_code=201)
+        return JSONResponse(content={"message": "New table created successfully"}, status_code=201)
     except Exception as e:
         return JSONResponse(content={"message": "Error occurred", "error": str(e)}, status_code=500)
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int):
+@app.get("/new_table/{new_table_id}")
+def read_new_table(new_table_id: int):
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM new_table WHERE id = %s", (item_id,))
+        cursor.execute("SELECT * FROM new_table WHERE id = %s", (new_table_id,))
         result = cursor.fetchone()
         connection.close()
         if result:
-            return JSONResponse(content={"message": "Item found", "result": result})
+            return JSONResponse(content={"message": "New table found", "result": result})
         else:
-            return JSONResponse(content={"message": "Item not found"}, status_code=404)
+            return JSONResponse(content={"message": "New table not found"}, status_code=404)
     except Exception as e:
         return JSONResponse(content={"message": "Error occurred", "error": str(e)}, status_code=500)
 
-@app.put("/items/{item_id}")
-async def update_item(item_id: int, item: Item):
+@app.put("/new_table/{new_table_id}")
+async def update_new_table(new_table_id: int, new_table: NewTable):
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
-        cursor.execute("UPDATE new_table SET name = %s WHERE id = %s", (item.name, item_id))
+        cursor.execute("UPDATE new_table SET first_name = %s, last_name = %s, email = %s, hire = %s, job_title = %s WHERE id = %s", 
+                      (new_table.first_name, new_table.last_name, new_table.email, new_table.hire, new_table.job_title, new_table_id))
         connection.commit()
         connection.close()
-        return JSONResponse(content={"message": "Item updated successfully"}, status_code=200)
+        return JSONResponse(content={"message": "New table updated successfully"}, status_code=200)
     except Exception as e:
         return JSONResponse(content={"message": "Error occurred", "error": str(e)}, status_code=500)
 
-@app.delete("/items/{item_id}")
-async def delete_item(item_id: int):
+@app.delete("/new_table/{new_table_id}")
+async def delete_new_table(new_table_id: int):
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
-        cursor.execute("DELETE FROM new_table WHERE id = %s", (item_id,))
+        cursor.execute("DELETE FROM new_table WHERE id = %s", (new_table_id,))
         connection.commit()
         connection.close()
-        return JSONResponse(content={"message": "Item deleted successfully"}, status_code=200)
+        return JSONResponse(content={"message": "New table deleted successfully"}, status_code=200)
     except Exception as e:
         return JSONResponse(content={"message": "Error occurred", "error": str(e)}, status_code=500)
