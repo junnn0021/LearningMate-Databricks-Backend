@@ -10,7 +10,7 @@ import os
 
 app = FastAPI()
 
-class NewTable(BaseModel):
+class Item(BaseModel):
     id: int
     first_name: str
 
