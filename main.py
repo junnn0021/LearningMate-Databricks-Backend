@@ -4,15 +4,10 @@ from fastapi.requests import Request
 from datetime import date
 from typing import Optional, Union, List, Any
 from fastapi import FastAPI
-from pydantic import BaseModel, Field
 import pymysql
 import os
 
 app = FastAPI()
-
-class Item(BaseModel):
-    id: int
-    first_name: str
 
 def get_db_connection():
     connection = pymysql.connect(
@@ -40,9 +35,10 @@ def test_db():
     return JSONResponse(content={"message": "Database connection successful", "result": result})
     
 @app.post("/items")
-async def create_item(item: Item):
+async def create_item(id: int, first_name: str):
     connection = get_db_connection()
     cursor = connection.cursor()
+    cursor.execute("INSERT INTO new_table (id, first_name) VALUES (%s, %s)", (id, first_name))
     connection.commit()
     connection.close()
     return JSONResponse(content={"message": "Item created successfully"}, status_code=201)
@@ -55,16 +51,15 @@ async def read_item(item_id: int):
     result = cursor.fetchone()
     connection.close()
     if result:
-        return JSONResponse(content={"message": "Item found", "result": (result[0], result[1])}, status_code=200)
+        return JSONResponse(content={"message": "Item found", "result": result})
     else:
         return JSONResponse(content={"message": "Item not found"}, status_code=404)
 
 @app.put("/items/{item_id}")
-async def update_item(item_id: int, item: Item):
+async def update_item(item_id: int, first_name: str):
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("UPDATE new_table SET first_name = %s WHERE id = %s", 
-                  (item.name, item_id))
+    cursor.execute("UPDATE new_table SET first_name = %s WHERE id = %s", (first_name, item_id))
     connection.commit()
     connection.close()
     return JSONResponse(content={"message": "Item updated successfully"}, status_code=200)
