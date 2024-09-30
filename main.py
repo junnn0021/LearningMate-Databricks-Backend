@@ -76,3 +76,4 @@ async def delete_item(item_id: int):
     cursor.execute("DELETE FROM new_table WHERE id = %s", (item_id,))
     connection.commit()
     connection.close()
+    return JSONResponse(content={"message": "Item deleted successfully"}, status_code=200)
