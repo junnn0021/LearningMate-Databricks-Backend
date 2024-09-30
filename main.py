@@ -15,7 +15,7 @@ class NewTable(BaseModel):
     first_name: str
     last_name: str
     email: str
-    hire: date
+    hire: str
     job_title: str
 
     class Config:
@@ -49,6 +49,7 @@ def read_new_table():
 @app.post("/new_table")
 async def create_new_table(new_table: NewTable):
     try:
+        new_table.hire = new_table.hire.strftime("%Y-%m-%d")  # date 데이터를 문자열 형식으로 변환
         connection = get_db_connection()
         cursor = connection.cursor()
         cursor.execute("INSERT INTO new_table (first_name, last_name, email, hire, job_title) VALUES (%s, %s, %s, %s, %s)", 
@@ -77,6 +78,7 @@ def read_new_table(new_table_id: int):
 @app.put("/new_table/{new_table_id}")
 async def update_new_table(new_table_id: int, new_table: NewTable):
     try:
+        new_table.hire = new_table.hire.strftime("%Y-%m-%d")  # date 데이터를 문자열 형식으로 변환
         connection = get_db_connection()
         cursor = connection.cursor()
         cursor.execute("UPDATE new_table SET first_name = %s, last_name = %s, email = %s, hire = %s, job_title = %s WHERE id = %s", 
