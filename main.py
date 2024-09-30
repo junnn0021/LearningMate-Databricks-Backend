@@ -11,11 +11,8 @@ import os
 app = FastAPI()
 
 class Item(BaseModel):
-     name: str
-     phone : Optional[int] = None # phone의 값을 Optional로 지정, 기본값을 None으로 설정
-     description : Union[int,float] # int, float 중 무엇이 들어오건 상관 없음
-     address : str = Field(example='서울특별시 ㅇㅇ구') #str 타입이고, 예시 설명을 추가
-     status : List[Any] = Field([], description = '텍스트로 상태를 설명해주세요') # 어떤 타입이든 받을 수 있는 리스트인데 기본 값은 비어있는 list[]
+    id: int
+    name: str
 
 @app.get("/")
 def read_root():
@@ -52,8 +49,8 @@ def test_db():
 async def create_item(item: Item):
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("INSERT INTO new_table (name, phone, description, address, status) VALUES (%s, %s, %s, %s, %s)", 
-                   (item.name, item.phone, item.description, item.address, str(item.status)))
+    cursor.execute("INSERT INTO new_table (name) VALUES (%s)", 
+                   (item.name,))
     connection.commit()
     connection.close()
     return JSONResponse(content={"message": "Item created successfully"}, status_code=201)
@@ -66,7 +63,7 @@ async def read_item(item_id: int):
     result = cursor.fetchone()
     connection.close()
     if result:
-        return JSONResponse(content={"message": "Item found", "result": result}, status_code=200)
+        return JSONResponse(content={"message": "Item found", "result": (result[0], result[1])}, status_code=200)
     else:
         return JSONResponse(content={"message": "Item not found"}, status_code=404)
     
@@ -74,8 +71,8 @@ async def read_item(item_id: int):
 async def update_item(item_id: int, item: Item):
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("UPDATE new_table SET name = %s, phone = %s, description = %s, address = %s, status = %s WHERE id = %s", 
-                  (item.name, item.phone, item.description, item.address, str(item.status), item_id))
+    cursor.execute("UPDATE new_table SET name = %s WHERE id = %s", 
+                  (item.name, item_id))
     connection.commit()
     connection.close()
     return JSONResponse(content={"message": "Item updated successfully"}, status_code=200)
