@@ -51,6 +51,7 @@ async def read_item(item_id: int):
     result = cursor.fetchone()
     connection.close()
     if result:
+        result = (str(result[0]), result[1])
         return JSONResponse(content={"message": "Item found", "result": result})
     else:
         return JSONResponse(content={"message": "Item not found"}, status_code=404)
