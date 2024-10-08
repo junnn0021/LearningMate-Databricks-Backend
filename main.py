@@ -20,7 +20,7 @@ def get_db_connection():
 
 @app.get("/")
 def read_root():
-    return {"Hello": "Junseok World"}
+    return {"Hello": "Junseok World."}
 
 @app.get("/test-db")
 def test_db():
