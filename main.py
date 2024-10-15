@@ -6,27 +6,55 @@ from typing import Optional, Union, List, Any
 from fastapi import FastAPI
 import pymysql
 import os
+from connection import get_db_connection
+from db.ai_movie_log import *
+from db.ai_movie_request import *
+from db.ai_movie_response import *
+from db.ai_movie_response_review import *
+from db.ai_movie_statics import *
 
 app = FastAPI()
 
-def get_db_connection():
-    connection = pymysql.connect(
-        host=os.environ['MYSQL_HOST'],
-        user=os.environ['MYSQL_USER'],
-        password=os.environ['MYSQL_PASSWORD'],
-        database=os.environ['MYSQL_DATABASE']
-    )
-    return connection
 
 @app.get("/")
 def read_root():
     return {"Hello": "Junseok World."}
 
+#MYSQL biz
+@app.get("/movie/log/select")
+def movie_log_select():
+    return ai_movie_log_select()
+
+@app.get("/movie/request/select")
+def movie_request_select():
+    return ai_movie_request_select()
+
+@app.get("/movie/response/select")
+def movie_response_select():
+    return ai_movie_response_select()
+
+#MYSQL call procedure
+@app.get("/movie/request/call")
+def movie_request_call_procedure():
+    return ai_movie_request_call_procedure("test","2024-05-15", 1)
+
+@app.get("/movie/request/call2")
+def movie_request_call_procedure2():
+    return ai_movie_request_call_procedure2("test", 10)
+
+
+
+
+
+
+
+
+#TEST
 @app.get("/test-db")
 def test_db():
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM new_table")
+    cursor.execute("SELECT * FROM new_schema.new_table")
     result = cursor.fetchall()
     connection.close()
 
