@@ -6,12 +6,13 @@ from typing import Optional, Union, List, Any
 from fastapi import FastAPI
 import pymysql
 import os
-from connection import get_db_connection
+from db_connection import get_db_connection
 from db.ai_movie_log import *
 from db.ai_movie_request import *
 from db.ai_movie_response import *
 from db.ai_movie_response_review import *
 from db.ai_movie_statics import *
+from ai.ai_serve import *
 
 app = FastAPI()
 
@@ -36,12 +37,22 @@ def movie_response_select():
 #MYSQL call procedure
 @app.get("/movie/request/call")
 def movie_request_call_procedure():
-    return ai_movie_request_call_procedure("test","2024-05-15", 1)
+    return ai_movie_request_call_procedure("call1", "2024-10-17", 1)
 
 @app.get("/movie/request/call2")
 def movie_request_call_procedure2():
-    return ai_movie_request_call_procedure2("test", 10)
+    return ai_movie_request_call_procedure2("call2", "2024-10-17", 10)
 
+#AI server
+@app.get("/ai")
+async def ai_serve(request: str):
+    request = "Recommend marvel movies with ratdings and director and plot. "
+    result = serve_completion(request)
+    print(result)
+    if result:
+        return JSONResponse(content={"message": "serve found", "result": result})
+    else:
+        return JSONResponse(content={"message": "server not found"}, status_code=404)
 
 
 
@@ -101,3 +112,6 @@ async def delete_item(item_id: int):
     connection.commit()
     connection.close()
     return JSONResponse(content={"message": "Item deleted successfully"}, status_code=200)
+
+
+

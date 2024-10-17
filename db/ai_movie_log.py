@@ -5,7 +5,7 @@ from datetime import date
 from typing import Optional, Union, List, Any
 import pymysql
 import os
-from connection import get_db_connection
+from db_connection import get_db_connection
 
 def ai_movie_log_select():
     connection = get_db_connection()
