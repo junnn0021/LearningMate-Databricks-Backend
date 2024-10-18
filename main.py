@@ -14,6 +14,8 @@ from db.ai_movie_response_review import *
 from db.ai_movie_statics import *
 from ai.ai_serve import *
 
+from pydantic import BaseModel
+
 app = FastAPI()
 
 
@@ -41,16 +43,20 @@ def movie_request_call_procedure():
 
 @app.get("/movie/request/call2")
 def movie_request_call_procedure2():
-    return ai_movie_request_call_procedure2("call2", "2024-10-17", 10)
+    return ai_movie_request_call_procedure2("call2", "10.10.10.10", "")
+
 
 #AI server
-@app.get("/ai")
-async def ai_serve(request: str):
-    request = "Recommend marvel movies with ratdings and director and plot. "
-    result = serve_completion(request)
-    print(result)
+class Item(BaseModel):
+    request: str
+    ip: str | None = None
+
+@app.post("/ai")
+async def ai_serve(item: Item):
+    #"Recommend marvel movies with ratdings and director and plot. "
+    result = serve_completion(item.request)
     if result:
-        return JSONResponse(content={"message": "serve found", "result": result})
+        return JSONResponse(content={"message": "Databricks 200", "result": result})
     else:
         return JSONResponse(content={"message": "server not found"}, status_code=404)
 
