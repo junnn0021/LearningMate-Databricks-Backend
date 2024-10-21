@@ -46,7 +46,7 @@ class AiMovieLog(BaseModel):
 class AiMovieRequest(BaseModel):
     ai_request_id: int  # bigint NOT
     ai_request_text: str  # text
-    ai_request_time: datetime  # datetime
+    ai_request_time: str  # datetime
     request_ip: str  # varchar(15)
 
     model_config = {
