@@ -22,10 +22,10 @@ def test() -> list[AiMovieRequest]:
     쿼리 프로세스 설명
     1. QUERY(SELECT)
     2. MAKE ARRAY JSON DATA(Header + Rows)
-    3. RETURN JSONResponse
-    4. Validate Pydantic model
+    3. Make List of dict
+    4. Validate & Convert Pydantic model from List(3)
     5. Return Pydantic model
-        - with json Response data
+        - default: return json data
     """
     mapping = []
     response = []
