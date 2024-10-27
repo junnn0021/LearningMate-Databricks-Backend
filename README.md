@@ -43,3 +43,8 @@ pip freeze > requirements.txt
 ```
 		
 ##### 그 다음, requirements.txt 파일을 GitHub에 업로드하세요.
+```
+서버 실행명령어:
+uvicorn app.main:app --reload
+
+```
