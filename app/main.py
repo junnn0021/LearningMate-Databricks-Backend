@@ -106,10 +106,23 @@ def movie_request_call_procedure():
 def movie_request_call_procedure2():
     return ai_movie_request_call_procedure2("call2", "10.10.10.10", "")
 
+
+# junseok MYSQL call procedure
+@app.post("/movie/log/call")
+async def save_ai_movie_log_call(log_data: AiMovieLog):
+    return ai_movie_log_call_procedure(log_data)
+
 @app.post("/movie/request/call3")
-async def save_movie_request(request_data: AiMovieRequest):
+async def save_ai_movie_request_call(request_data: AiMovieRequest):
     return ai_movie_request_call_procedure3(request_data)
 
+@app.post("/movie/response/call")
+async def save_ai_movie_response_call(response_data: AiMovieResponse):
+    return await ai_movie_response_call_procedure(response_data)
+
+@app.post("/movie/review/call")
+async def save_movie_review_call(review_data: AiMovieResponseReview):
+    return ai_movie_review_call_procedure(review_data)
 
 #AI server
 @app.post("/ai")

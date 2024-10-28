@@ -49,10 +49,9 @@ def ai_movie_request_call_procedure3(request_data: AiMovieRequest):
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
-            current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             cursor.callproc(
                 'ai_movie.usp_ai_request_I', 
-                (request_data.ai_request_text, current_date, request_data.request_ip)
+                (request_data.ai_request_text, request_data.ai_request_time, request_data.request_ip)
             )
             result = cursor.fetchall()
         connection.commit()
