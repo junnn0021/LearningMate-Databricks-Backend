@@ -1,6 +1,6 @@
 from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, Field  
 
 
 class AiMovieLog(BaseModel):
@@ -44,7 +44,8 @@ class AiMovieLog(BaseModel):
 
 
 class AiMovieRequest(BaseModel):
-    ai_request_id: int  # bigint NOT
+    # ai_request_id: int  # bigint NOT
+    ai_request_id: Optional[int] = Field(default=None)
     ai_request_text: str  # text
     ai_request_time: str  # datetime
     request_ip: str  # varchar(15)
@@ -53,7 +54,8 @@ class AiMovieRequest(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "ai_request_id": "temp",  # 로그아이디
+                    # "ai_request_id": "temp",  # 로그아이디
+                    "ai_request_id": None,
                     "ai_request_text": "temp",  # 추천요청 내용
                     "ai_request_time": "temp",  # 추천요청시간
                     "request_ip": "temp",  # 요청IP

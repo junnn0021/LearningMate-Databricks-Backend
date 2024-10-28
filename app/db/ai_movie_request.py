@@ -6,6 +6,7 @@ from typing import Optional, Union, List, Any
 import pymysql
 import os
 from app.db_connection import get_db_connection
+from app.models import AiMovieRequest
 
 def ai_movie_request_select():
     connection = get_db_connection()
@@ -40,5 +41,23 @@ def ai_movie_request_call_procedure2(ai_request_text:str, date:str, request_ip:i
         return JSONResponse(content={"message": "Item updated successfully"}, status_code=200)
     except Exception as e:
         return {"error": str(e)}
+    finally:
+        connection.close()
+
+#call junseok code
+def ai_movie_request_call_procedure3(request_data: AiMovieRequest):
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            cursor.callproc(
+                'ai_movie.usp_ai_request_I', 
+                (request_data.ai_request_text, current_date, request_data.request_ip)
+            )
+            result = cursor.fetchall()
+        connection.commit()
+        return JSONResponse(content={"message": "Request saved successfully"}, status_code=200)
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
     finally:
         connection.close()

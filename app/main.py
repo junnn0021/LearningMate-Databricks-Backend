@@ -106,6 +106,10 @@ def movie_request_call_procedure():
 def movie_request_call_procedure2():
     return ai_movie_request_call_procedure2("call2", "10.10.10.10", "")
 
+@app.post("/movie/request/call3")
+async def save_movie_request(request_data: AiMovieRequest):
+    return ai_movie_request_call_procedure3(request_data)
+
 
 #AI server
 @app.post("/ai")
