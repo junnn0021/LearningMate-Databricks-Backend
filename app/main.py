@@ -76,6 +76,7 @@ def translate():
     # >> {"message":"Ukraine's presidential office said it would hold a presidential election shortly after the war with Russia, Ukrainian media Kyiv Independent and Ukraine's Scafrauda reported on the 27th (local time)."}
     # sentence = "한국 영화 중에 슬픈영화 10가지 알려줘"
     sentence = "Tell me 10 sad Korean movies"
+    print("sent : {}", sentence)
     # msg = run_translate_ko_to_en(source="ko",target="en",sentence=sentence)
     msg = run_translate_ko_to_en(source="en",target="ko",sentence=sentence)
     return {"message":msg}
@@ -129,12 +130,12 @@ async def save_movie_review_call(review_data: AiMovieResponseReview):
 async def ai_serve(request: Request):
     # request = "Recommend marvel movies with ratdings and director and plot. "
     data = await request.json()
-    request_query = data.get("request")
-    print(request_query)
-    result = serve_completion(request_query)
-    print(result)
-    if result:
-        return JSONResponse(content={"message": "Databricks 200", "result": result})
+    request_msg = data.get("request")
+    print("request_msg : {0}". format(request_msg))
+    completion_result = serve_completion(request_msg)
+    print("AI 결과 : {0}". format(completion_result))
+    if completion_result:
+        return JSONResponse(content={"message": "Databricks 200", "result": completion_result})
     else:
         return JSONResponse(content={"message": "server not found"}, status_code=404)
 
