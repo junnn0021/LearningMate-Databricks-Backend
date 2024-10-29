@@ -35,7 +35,7 @@ jobs:
         shell: bash
 
       - name: Copy files to temp directory via scp
-        run: scp -r -o StrictHostKeyChecking=no. ec2-user@${{ secrets.EC2_PUB_IP }}:/home/ec2-user/
+        run: scp -r -o StrictHostKeyChecking=no./* ec2-user@${{ secrets.EC2_PUB_IP }}:/home/ec2-user/
         env:
           EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
         shell: bash
