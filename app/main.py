@@ -10,6 +10,8 @@ from app.db.ai_movie_statics import *
 from app.ai.ai_serve import *
 from app.models import AiMovieRequest
 
+from app.routers import databricks_routers
+from app.routers import statistics_routers
 
 # 환경변수 세팅 (.env 파일생성필요)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -17,6 +19,8 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # set_env()
 app = FastAPI()
+app.include_router(databricks_routers.router)
+app.include_router(statistics_routers.router)
 
 # 전체 리스트 조회
 @app.get("/test", response_model=list[AiMovieRequest])
@@ -69,7 +73,7 @@ def test01():
     return {"Hello": "Junseok World."}
 
 
-@app.get("/translate")
+@app.get("/ ")
 def translate():
     from app.translate import run_translate_ko_to_en
     # sentence = "우크라이나 대통령실이 러시아와 전쟁이 끝난 직후 대통령 선거를 치를 것이라고 밝혔다고 우크라이나 매체 키이우인디펜던트와 우크라인스카프라우다가 27일(현지시간) 보도했다."
