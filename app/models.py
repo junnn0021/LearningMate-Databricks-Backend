@@ -44,8 +44,8 @@ class AiMovieLog(BaseModel):
 
 
 class AiMovieRequest(BaseModel):
-    ai_request_id: int  # bigint NOT
-    #ai_request_id: Optional[int] = Field(default=None)
+    # ai_request_id: int  # bigint NOT
+    ai_request_id: Optional[int] = Field(default=None)
     ai_request_text: str  # text
     ai_request_time: str  # datetime
     request_ip: str  # varchar(15)
@@ -54,9 +54,9 @@ class AiMovieRequest(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "ai_request_id": "temp",  # 로그아이디
-                    # "ai_request_id": None,
-                    "ai_request_text": "temp",  # 추천요청 내용
+                    # "ai_request_id": "temp",  # 로그아이디
+                    "ai_request_id": None,
+                    "ai_request_text": "액션 영화 추천 부탁해",  # 추천요청 내용
                     "ai_request_time": "temp",  # 추천요청시간
                     "request_ip": "temp",  # 요청IP
                 }
@@ -66,17 +66,18 @@ class AiMovieRequest(BaseModel):
 
 
 class AiMovieResponse(BaseModel):
-    ai_response_id: int  # bigint NOT
+    ai_response_id: Optional[int] = Field(default=None)
+    # ai_response_id: int  # bigint NOT
     ai_request_id: str  # bigint NOT
     ai_response_text: str  # text
-    ai_response_time: str  # int
+    ai_response_time: int  # int
     movie_title: str  # varchar(45)
-    movie_year: str  # varchar(45)
+    movie_year: int  # varchar(45)
     movie_genre: str  # varchar(45)
     movie_director: str  # varchar(45)
     movie_actor: str  # varchar(255)
     movie_nation: str  # varchar(45)
-    movie_age: str  # varchar(45)
+    movie_age: int  # varchar(45)
     movie_story: str  # text
     ai_response_model: str  # varchar(45)
     reg_dt: datetime  # datetime
@@ -85,7 +86,7 @@ class AiMovieResponse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "ai_response_id": "temp",  # 로그아이디
+                    "ai_response_id": None,  # 로그아이디
                     "ai_request_id": "temp",  # 추천요청 내용
                     "ai_response_text": "temp",  # 추천요청시간
                     "ai_response_time": "temp",  # 요청IP
@@ -108,9 +109,9 @@ class AiMovieResponse(BaseModel):
 class AiMovieResponseReview(BaseModel):
     ai_review_id: int  # bigint
     ai_response_id: int  # bigint
-    ai_user_review: str  # varchar(255
+    ai_user_review: str  # varchar(255)
     ai_user_score: int  # int
-    reg_dt: datetime  # datetime
+    # reg_dt: datetime  # datetime
 
     model_config = {
         "json_schema_extra": {
@@ -118,9 +119,9 @@ class AiMovieResponseReview(BaseModel):
                 {
                     "ai_review_id": "temp",  # 리뷰아이디
                     "ai_response_id": "temp",  # 추천응답 아이디
-                    "ai_user_review": "temp",  # 사용자 리뷰 내용
-                    "ai_user_score": "temp",  # 사용자 점수
-                    "reg_dt": "temp",  # 등록일시
+                    "ai_user_review": "흥미진진하다",  # 사용자 리뷰 내용
+                    "ai_user_score": "5",  # 사용자 점수
+                    # "reg_dt": "temp",  # 등록일시
                 }
             ]
         }

@@ -38,6 +38,7 @@ async def ai_movie_response_call_procedure(response_data: AiMovieResponse):
                     response_data.movie_age,
                     response_data.movie_story,
                     response_data.ai_response_model,
+                    response_data.reg_dt,
                 )
             )
             result_id = cursor.fetchone()[0]
