@@ -35,7 +35,7 @@ jobs:
         shell: bash
 
       - name: Copy files to temp directory via scp
-        run: scp -o StrictHostKeyChecking=no main.py ec2-user@${{ secrets.EC2_PUB_IP }}:/home/ec2-user/main.py
+        run: scp -o StrictHostKeyChecking=no main.py ec2-user@${{ secrets.EC2_PUB_IP }}:/home/ec2-user/*
         env:
           EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
         shell: bash
@@ -43,7 +43,7 @@ jobs:
       - name: Move files to target directory with sudo
         run: |
           ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUB_IP }} << 'EOF'
-            sudo mv /home/ec2-user/main.py /data001/fastapi/main.py
+            sudo mv /home/ec2-user/* /data001/fastapi/
           EOF
         env:
           EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
