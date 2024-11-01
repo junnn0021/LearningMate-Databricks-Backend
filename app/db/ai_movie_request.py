@@ -46,14 +46,19 @@ def ai_movie_request_call_procedure2(ai_request_text:str, date:str, request_ip:i
 
 #call junseok code
 def ai_movie_request_call_procedure3(request_data: AiMovieRequest):
+    print("request_data : {0}".format(request_data))
+    print("ai_request_text : {0}".format(request_data["ai_request_text"]))
+    print("ai_request_id : {0}".format(request_data["ai_request_id"]))
+    print("request_ip : {0}".format(request_data["request_ip"]))
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
             cursor.callproc(
-                'ai_movie.usp_ai_request_I', 
-                (request_data.ai_request_text, request_data.ai_request_time, request_data.request_ip)
+                'ai_movie.usp_ai_movie_request_I',
+                (request_data["ai_request_text"], "", request_data["request_ip"])
             )
             result = cursor.fetchall()
+            print("result : {0}".format(result))
         connection.commit()
         return JSONResponse(content={"message": "Request saved successfully"}, status_code=200)
     except Exception as e:

@@ -38,24 +38,4 @@ def serve_completion(request):
         model="devops3_serving",
         max_tokens=8000
     )
-    response = chat_completion.choices[0].message.content
-    # JSON 데이터를 파싱하여 변수에 저장
-    response_split = response.split("```")[1].split("```")[0].strip()
-    data = json.loads(response_split, strict=False)
-
-    # 오브젝트 변수를 새로 만들고, 변환할 것 변환 한 다음 리스트에 저장
-    output_list_value = []
-    for movie in data:
-        movie_data = {
-            "Title": movie['title'],
-            "Rating": movie['rating'],
-            "Actors": movie['actors'],
-            "Director": movie['director'],
-            "Plot": movie['plot'],
-            "Plot_trans": run_translate_ko_to_en(source="en", target="ko", sentence=movie['plot'])
-        }
-        output_list_value.append(movie_data)
-
-    # JSON 재 변환 후 반환
-    json_data = json.dumps(output_list_value, ensure_ascii=False)
-    return json_data
+    return chat_completion.choices[0].message.content
