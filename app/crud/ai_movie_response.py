@@ -19,12 +19,12 @@ def ai_movie_response_select():
     return JSONResponse(content={"message": "Database connection successful", "result": result})
 
 #call junseok code
-async def ai_movie_response_call_procedure(response_data: AiMovieResponse):
+async def save_ai_movie_response_call_procedure(response_data: AiMovieResponse):
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
             cursor.callproc(
-                'ai_movie.usp_ai_response_I',
+                'ai_movie.usp_ai_movie_response_I',
                 (
                     response_data.ai_request_id,
                     response_data.ai_response_text,

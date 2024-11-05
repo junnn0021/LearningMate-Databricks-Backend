@@ -19,7 +19,7 @@ def ai_movie_log_select():
     return JSONResponse(content={"message": "Database connection successful", "result": result})
 
 #call junseok code
-def ai_movie_log_call_procedure(log_data: AiMovieLog):
+def save_ai_movie_log_call_procedure(log_data: AiMovieLog):
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
