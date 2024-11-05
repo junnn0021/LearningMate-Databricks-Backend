@@ -137,39 +137,45 @@ async def ai_serve(request: Request):
     request_msg = data.get("request")
     request_ip = data.get("request_ip")
     print("request_msg : {0}". format(request_msg))
-    completion_result = serve_completion(request_msg)
+    completion_result= serve_completion(request_msg)
     print("AI 결과 : {0}". format(completion_result))
     if completion_result:
-        # JSON 데이터를 파싱하여 변수에 저장
-        response_split = completion_result.split("```")[1].split("```")[0].strip()
-        data = json.loads(response_split, strict=False)
-
-        # 오브젝트 변수를 새로 만들고, 변환할 것 변환 한 다음 리스트에 저장
-        output_list_value = []
-        for movie in data:
-            movie_data = {
-                "Title": movie['title'],
-                "Rating": movie['rating'],
-                "Actors": movie['actors'],
-                "Director": movie['director'],
-                "Plot": movie['plot'],
-                "Plot_trans": run_translate_ko_to_en(source="en", target="ko", sentence=movie['plot'])
-            }
-            output_list_value.append(movie_data)
-
-        # JSON 재 변환 후 반환
-        json_data = json.dumps(output_list_value, ensure_ascii=False)
+        # # JSON 데이터를 파싱하여 변수에 저장
+        #
+        # # response_split_txt = completion_result.split("```json")[0]
+        # response_split_json = completion_result.split("```")[1].split("```")[0].strip()
+        # # print("response_split_txt : {0}".format(response_split_txt))
+        # # print("response_split_json : {0}".format(response_split_json))
+        # data = json.loads(response_split_json, strict=False)
+        #
+        # # 오브젝트 변수를 새로 만들고, 변환할 것 변환 한 다음 리스트에 저장
+        # output_list_value = []
+        # for movie in data:
+        #     movie_data = {
+        #         "Title": movie['title'],
+        #         "Rating": movie['rating'],
+        #         "Actors": movie['actors'],
+        #         "Director": movie['director'],
+        #         "Plot": movie['plot'],
+        #         "Plot_trans": run_translate_ko_to_en(source="en", target="ko", sentence=movie['plot'])
+        #     }
+        #     output_list_value.append(movie_data)
+        #
+        # ## DB insert 부분 추가
+        #
+        # # JSON 재 변환 후 반환
+        # json_data = json.dumps(output_list_value, ensure_ascii=False)
 
         # 성공 후 요청 질문 DB insert를 하는 프로시저 호출
-        post_request_data = {
-            "ai_request_text": request_msg,
-            "ai_request_id": 15,
-            "request_ip": request_ip
-        }
-        print("post_request_data : {0}".format(post_request_data))
-        ai_movie_request_call_procedure3(post_request_data)
+        # post_request_data = {
+        #     "ai_request_text": request_msg,
+        #     "ai_request_id": 15,
+        #     "request_ip": request_ip
+        # }
+        # print("post_request_data : {0}".format(post_request_data))
+        # ai_movie_request_call_procedure3(post_request_data)
 
-        return JSONResponse(content={"message": "Databricks 200", "result": json_data})
+        return JSONResponse(content={"message": "Databricks 200", "result": completion_result})
 
     else:
         return JSONResponse(content={"message": "server not found"}, status_code=404)
@@ -189,7 +195,6 @@ def test_db():
     return JSONResponse(
         content={"message": "Database connection successful", "result": result}
     )
-
 
 @app.post("/items")
 async def create_item(id: int, first_name: str, last_name: str, email: str, hire: str):

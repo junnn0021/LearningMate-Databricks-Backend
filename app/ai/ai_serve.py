@@ -27,7 +27,8 @@ def serve_completion(request):
         messages=[
             {
                 "role": "system",
-                "content": "You are an AI assistant, Please translate the answer into Json object format {[{'title': '', 'rating': '', 'actors': [], 'director': '', 'plot': ''] And the plot should not have any quotes.}"
+                # "content": "You are an AI assistant, Please translate the answer provide the response in plain text format and into Json object format {[{'title': '', 'rating': '', 'actors': [], 'director': '', 'Genre' : '', 'plot(plot should not have any quotes.)': '']}",
+                "content": "You are an AI assistant, Please translate the answer provide the response in plain text format",
             },
             {
                 "role": "user",
