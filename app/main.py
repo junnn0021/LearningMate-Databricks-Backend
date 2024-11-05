@@ -175,7 +175,7 @@ async def ai_serve(request: Request):
         # print("post_request_data : {0}".format(post_request_data))
         # ai_movie_request_call_procedure3(post_request_data)
 
-        return JSONResponse(content={"message": "Databricks 200", "result": completion_result})
+        return JSONResponse(status_code=200, content={"message": "minsoo"})
 
     else:
         return JSONResponse(content={"message": "server not found"}, status_code=404)
