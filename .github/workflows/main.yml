@@ -43,7 +43,7 @@ jobs:
       - name: Move files to target directory with sudo
         run: |
           ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUB_IP }} << 'EOF'
-            sudo mv /home/ec2-user/* /data001/fastapi/
+            sudo cp -r /home/ec2-user/* /data001/fastapi/
           EOF
         env:
           EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
