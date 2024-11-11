@@ -1,6 +1,7 @@
-from fastapi import FastAPI, Depends, Response, Request
+from fastapi import FastAPI, Depends, Response
 from fastapi.responses import JSONResponse
 from app.ai.ai_serve import *
+from app.db.ai_movie_request import *
 
 from app.routers import databricks_routers
 from app.routers import statistics_routers
@@ -24,7 +25,7 @@ app.add_middleware(
 )
 
 @app.get("/")
-def test01():
+def health_check():
     return {"Hello": "Junseok World."}
 
 
@@ -81,7 +82,7 @@ async def ai_serve(request: Request):
             "request_ip": request_ip
         }
         print("post_request_data : {0}".format(post_request_data))
-        save_ai_movie_request_call_procedure(post_request_data)
+        ai_movie_request_call_procedure(post_request_data)
 
         return JSONResponse(content={"message": "Databricks 200", "result": json_data})
 
