@@ -11,7 +11,7 @@ router = APIRouter(
 @router.post("/movie")
 async def save_ai_movie_info(movie_data: AiMovieInfo):
     args = (
-        movie_data.ai_response_id,
+        movie_data.ai_movie_response_id,
         movie_data.movie_title,
         movie_data.movie_year,
         movie_data.movie_genre,

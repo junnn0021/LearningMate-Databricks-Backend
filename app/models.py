@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from pydantic import BaseModel
 
 class AiMovieInfo(BaseModel):
-    ai_response_id: int 
+    ai_movie_response_id: int 
     movie_title: str 
     movie_year: int  
     movie_genre: str 
@@ -23,7 +23,7 @@ class AiMovieInfo(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "ai_response_id": 1,  
+                    "ai_movie_response_id": 1,  
                     "movie_title": "Inception",
                     "movie_year": 2010, 
                     "movie_genre": "SF",
