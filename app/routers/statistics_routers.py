@@ -1,3 +1,4 @@
+from app.db.ai_movie_request import save_ai_movie_request_call_procedure
 from app.db.call_db_procedure import call_db_procedure
 from app.models import *
 from fastapi import APIRouter
@@ -28,12 +29,7 @@ async def save_ai_movie_log_call(log_data: AiMovieLog):
 
 @router.post("/request")
 async def save_ai_movie_request_call(request_data: AiMovieRequest):
-    args = (
-        request_data.ai_request_text,
-        request_data.ai_request_time,
-        request_data.request_ip
-    )
-    return await call_db_procedure('ai_movie.usp_ai_movie_request_I', args)
+    return save_ai_movie_request_call_procedure(request_data)
 
 @router.post("/response")
 async def save_ai_movie_response_call(response_data: AiMovieResponse):
