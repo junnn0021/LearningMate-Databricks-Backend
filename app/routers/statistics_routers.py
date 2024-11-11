@@ -1,8 +1,8 @@
 from app.crud.ai_movie_log import save_ai_movie_log_call_procedure
 from app.crud.ai_movie_request import save_ai_movie_request_call_procedure
 from app.crud.ai_movie_response import save_ai_movie_response_call_procedure
-from app.crud.ai_movie_statics import *
 from app.db.ai_movie_response_review import ai_movie_review_call_procedure
+from app.crud.ai_movie_statics import *
 from app.models import *
 from fastapi import APIRouter
 

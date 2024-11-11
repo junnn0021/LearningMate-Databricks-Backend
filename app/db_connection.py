@@ -1,8 +1,7 @@
 import pymysql
 import os
 # from dotenv import load_dotenv
- 
- 
+
 def get_db_connection():
     connection = pymysql.connect(
         host=os.environ["HOST"],
