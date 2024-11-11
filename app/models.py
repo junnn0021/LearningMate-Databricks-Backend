@@ -3,6 +3,40 @@ from datetime import datetime
 from pydantic import BaseModel, Field  
 
 
+from pydantic import BaseModel
+
+from pydantic import BaseModel
+
+class AiMovieInfo(BaseModel):
+    ai_response_id: int 
+    movie_title: str 
+    movie_year: int  
+    movie_genre: str 
+    movie_director: str  
+    movie_actor: str  
+    movie_nation: str  
+    movie_age: int  
+    movie_story: str  
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "ai_response_id": 1,  
+                    "movie_title": "Inception",
+                    "movie_year": 2010, 
+                    "movie_genre": "SF",
+                    "movie_director": "Christopher Nolan", 
+                    "movie_actor": "Leonardo DiCaprio",
+                    "movie_nation": "USA", 
+                    "movie_age": 13, 
+                    "movie_story": "공상 과학 영화"
+                }
+            ]
+        }
+    }
+
+
 class AiMovieLog(BaseModel):
     log_id: int  # bigint NOT
     log_type: str  # varchar(10)

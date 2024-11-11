@@ -8,6 +8,21 @@ router = APIRouter(
     prefix="/statistics",
 )
 
+@router.post("/movie")
+async def save_ai_movie_info(movie_data: AiMovieInfo):
+    args = (
+        movie_data.ai_response_id,
+        movie_data.movie_title,
+        movie_data.movie_year,
+        movie_data.movie_genre,
+        movie_data.movie_director,
+        movie_data.movie_actor,
+        movie_data.movie_nation,
+        movie_data.movie_age,
+        movie_data.movie_story,
+    )
+    return await call_db_procedure('usp_ai_movie_info_I', args)
+
 @router.post("/log")
 async def save_ai_movie_log_call(log_data: AiMovieLog):
     args = (
