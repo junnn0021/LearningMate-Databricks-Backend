@@ -17,6 +17,7 @@ class AiMovieInfo(BaseModel):
     movie_nation: str  
     movie_age: int  
     movie_story: str  
+    reg_dt: str
 
     model_config = {
         "json_schema_extra": {
@@ -30,7 +31,8 @@ class AiMovieInfo(BaseModel):
                     "movie_actor": "Leonardo DiCaprio",
                     "movie_nation": "USA", 
                     "movie_age": 13, 
-                    "movie_story": "공상 과학 영화"
+                    "movie_story": "공상 과학 영화",
+                    "reg_dt": "2024-11-11 11:11:11"
                 }
             ]
         }

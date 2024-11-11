@@ -20,6 +20,7 @@ async def save_ai_movie_info(movie_data: AiMovieInfo):
         movie_data.movie_nation,
         movie_data.movie_age,
         movie_data.movie_story,
+        movie_data.reg_dt
     )
     return await call_db_procedure('usp_ai_movie_info_I', args)
 
