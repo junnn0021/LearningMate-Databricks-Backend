@@ -2,18 +2,13 @@ from typing import Optional
 from datetime import datetime
 from pydantic import BaseModel, Field  
 
-
-from pydantic import BaseModel
-
-from pydantic import BaseModel
-
 class AiMovieInfo(BaseModel):
+    ai_movie_info_id: int
     ai_movie_response_id: int 
     movie_title: str 
-    movie_year: int  
     movie_genre: str 
-    movie_director: str  
-    movie_actor: str  
+    movie_actor: str 
+    movie_year: int   
     movie_nation: str  
     movie_age: int  
     movie_story: str  
@@ -23,12 +18,12 @@ class AiMovieInfo(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
+                    "ai_movie_info_id": 1,
                     "ai_movie_response_id": 1,  
                     "movie_title": "Inception",
-                    "movie_year": 2010, 
                     "movie_genre": "SF",
-                    "movie_director": "Christopher Nolan", 
                     "movie_actor": "Leonardo DiCaprio",
+                    "movie_year": 2010, 
                     "movie_nation": "USA", 
                     "movie_age": 13, 
                     "movie_story": "공상 과학 영화",
