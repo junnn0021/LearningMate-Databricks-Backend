@@ -8,7 +8,7 @@ from app.translate import run_translate_ko_to_en
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-def serve_completion(request):
+def serve_completion(request, type):
 
     msg = run_translate_ko_to_en(source="ko",target="en",sentence=request)
     print("영문을 한글로 변경: {}".format(msg))
@@ -23,18 +23,21 @@ def serve_completion(request):
         base_url=os.environ["ENDPOINT"]
     )
 
+    if type == 1:
+        ai_request_format = "You are an AI assistant, Please translate the answer provide the response in plain text format and into Json object format {[{'title': '', 'rating': '', 'actors': [], 'director': '', 'Genre' : '', 'plot(plot should not have any quotes.)': '']}"
+    else:
+        ai_request_format = "You are an AI assistant, Please translate the answer provide the response in plain text format"
+
     chat_completion = client.chat.completions.create(
         messages=[
             {
                 "role": "system",
-                # "content": "You are an AI assistant, Please translate the answer provide the response in plain text format and into Json object format {[{'title': '', 'rating': '', 'actors': [], 'director': '', 'Genre' : '', 'plot(plot should not have any quotes.)': '']}",
-                "content": "You are an AI assistant, Please translate the answer provide the response in plain text format",
+                "content": ai_request_format
             },
             {
                 "role": "user",
-                # "content": msg + ". Please translate the answer into Json file"
                 "content": msg
-    }
+             }
         ],
         model="devops3_serving",
         max_tokens=8000
