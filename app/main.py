@@ -92,12 +92,13 @@ async def ai_serve(request: Request):
     try:
         ## Front 단으로 넘길 AI 연결
         completion_result_front = serve_completion(request_msg, 2)  ## Front 단으로 전송하기 위한 데이터로 변환
-        print("front에 반환하는 목적 AI 결과 : {0}".format(completion_result_front))
+        completion_result_front_ko = translate_naveropenapi(source="en", target="ko", sentence=completion_result_front)
+        print("front에 반환하는 목적 AI 결과 : {0}".format(completion_result_front_ko))
 
     except Exception as e:
         return JSONResponse(status_code=404, content={"result": e})
 
-    return JSONResponse(status_code=200, content={"result": completion_result_front})
+    return JSONResponse(status_code=200, content={"result": completion_result_front_ko})
 
 
 #민수님 call test
