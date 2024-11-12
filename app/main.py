@@ -7,6 +7,8 @@ from app.routers import databricks_routers
 from app.routers import statistics_routers
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.translate import translate_naveropenapi
+
 # 환경변수 세팅 (.env 파일생성필요)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
@@ -66,7 +68,7 @@ async def ai_serve(request: Request):
                 "Actors": movie['actors'],
                 "Director": movie['director'],
                 "Plot": movie['plot'],
-                "Plot_trans": run_translate_ko_to_en(source="en", target="ko", sentence=movie['plot'])
+                "Plot_trans": translate_naveropenapi(source="en", target="ko", sentence=movie['plot'])
             }
             output_list_value.append(movie_data)
 
