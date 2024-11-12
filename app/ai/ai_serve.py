@@ -2,7 +2,7 @@ from openai import OpenAI
 import json
 import os
 from dotenv import load_dotenv
-from app.translate import run_translate_ko_to_en
+from app.translate import translate_naveropenapi
 
 # 환경변수 세팅 (.env 파일생성필요)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -10,7 +10,7 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 def serve_completion(request, type):
 
-    msg = run_translate_ko_to_en(source="ko",target="en",sentence=request)
+    msg = translate_naveropenapi(source="ko",target="en",sentence=request)
     print("영문을 한글로 변경: {}".format(msg))
 
     """

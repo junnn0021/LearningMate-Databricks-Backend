@@ -31,14 +31,14 @@ def health_check():
 
 @app.get("/ ")
 def translate():
-    from app.translate import run_translate_ko_to_en
+    from app.translate import translate_naveropenapi
     # sentence = "우크라이나 대통령실이 러시아와 전쟁이 끝난 직후 대통령 선거를 치를 것이라고 밝혔다고 우크라이나 매체 키이우인디펜던트와 우크라인스카프라우다가 27일(현지시간) 보도했다."
     # >> {"message":"Ukraine's presidential office said it would hold a presidential election shortly after the war with Russia, Ukrainian media Kyiv Independent and Ukraine's Scafrauda reported on the 27th (local time)."}
     # sentence = "한국 영화 중에 슬픈영화 10가지 알려줘"
     sentence = "Tell me 10 sad Korean movies"
     print("sent : {}", sentence)
     # msg = run_translate_ko_to_en(source="ko",target="en",sentence=sentence)
-    msg = run_translate_ko_to_en(source="en",target="ko",sentence=sentence)
+    msg = translate_naveropenapi(source="en",target="ko",sentence=sentence)
     return {"message":msg}
 
 #AI server
