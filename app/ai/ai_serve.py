@@ -24,7 +24,7 @@ def serve_completion(request, type):
     )
 
     if type == 1:
-        ai_request_format = "You are an AI assistant, Please translate the answer provide the response in plain text format and into Json object format {[{'title': '', 'rating': '', 'actors': [], 'director': '', 'Genre' : '', 'plot(plot should not have any quotes.)': '']}"
+        ai_request_format = "You are an AI assistant, Please translate the answer provide the response in plain text format and into Json object format as a list {[{'title': '', 'nation': '', 'genre': '', 'actors': '', 'director': '', 'recommended_age' : '', 'plot(plot should not have any quotes.)': '']}"
     else:
         ai_request_format = "You are an AI assistant, Please translate the answer provide the response in plain text format"
 

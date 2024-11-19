@@ -75,18 +75,18 @@ class AiMovieLog(BaseModel):
 
 
 class AiMovieRequest(BaseModel):
-    ai_request_id: Optional[int] = Field(default=None)
+    # ai_request_id: Optional[int] = Field(default=None)
     ai_request_text: str  # text
-    ai_request_time: str  # datetime
+    # ai_request_time: str  # datetime
     request_ip: str  # varchar(15)
 
     model_config = {
         "json_schema_extra": {
             "examples": [
                 {
-                    "ai_request_id": None,
+                    # "ai_request_id": None,
                     "ai_request_text": "액션 영화 추천 부탁해",  # 추천요청 내용
-                    "ai_request_time": "temp",  # 추천요청시간
+                    # "ai_request_time": "temp",  # 추천요청시간
                     "request_ip": "temp",  # 요청IP
                 }
             ]
