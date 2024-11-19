@@ -122,21 +122,43 @@ async def save_ai_movie_info_call(data):
 
     for movie in data:
         movie_data = AiMovieInfo(
-            # ai_movie_info_id=11,
+            ai_movie_info_id=11,  # 필수 필드 추가
             ai_movie_response_id=11,
             movie_title=movie['title'],
             movie_genre=movie['genre'],
             movie_actor=movie['actors'],
-            movie_year = 2024,
-            #movie_year=movie['year'],
+            movie_year=2024,
             movie_nation=movie['nation'],
             movie_director=movie['director'],
-            movie_age= 18,
-            #movie_age=movie['recommended_age'],
-            movie_story=translate_naveropenapi(source="en", target="ko", sentence=movie['plot'])
+            movie_age=18,
+            movie_story=translate_naveropenapi(source="en", target="ko", sentence=movie['plot']),
+            reg_dt=datetime.now().isoformat()  # 문자열로 변환
         )
         await save_ai_movie_info(movie_data)
 
 
     print("post_request_data : {0}".format(movie_data))
+
+
+#민수님 call test
+test_content = """기꺼이 영화를 추천하겠습니다. 다양한 장르를 기반으로 몇 가지 제안 사항을 소개합니다:
+
+**액션/스릴러:**
+* '미션: 임파서블 - 폴아웃'(2018)은 놀라운 스턴트와 흥미진진한 줄거리를 가진 하이옥탄 스파이 스릴러입니다.
+* '존 윅: 챕터 3 - 파라벨룸'(2019) - 아드레날린을 자극하는 액션 영화로, 전투 안무가 인상적입니다.
+
+**로맨스:**
+* '수첩'(2004)은 수십 년에 걸친 아름다운 러브 스토리를 담은 고전 로맨틱 드라마입니다.
+* '라라 랜드'(2016)는 멋진 공연과 매혹적인 사운드트랙이 돋보이는 현대 로맨틱 뮤지컬입니다.
+
+**공상 과학 소설:**
+* '블레이드 러너 2049'(2017)는 생각을 자극하는 서사를 담은 시각적으로 놀라운 공상과학 서사시입니다.
+* '어라이벌'(2016)은 독특한 시간 여행 콘셉트의 놀라운 공상과학 영화입니다.
+
+**코미디:**
+* '행오버'(2009)는 라스베이거스의 거친 밤을 다룬 유쾌하고 거친 코미디입니다.
+* '그랜드 부다페스트 호텔'(2014)은 독특한 스토리라인을 갖춘 기발하고 시각적으로 멋진 코미디 드라마입니다."""
+@router.post("/ai-nocall")
+async def ai_serve_test():
+    return JSONResponse(status_code=200, content={"result":test_content})
 
