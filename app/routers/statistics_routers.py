@@ -11,7 +11,7 @@ router = APIRouter(
 @router.post("/info")
 async def save_ai_movie_info(movie_data: AiMovieInfo):
     args = (
-        movie_data.ai_movie_info_id,
+        # movie_data.ai_movie_info_id,
         movie_data.ai_movie_response_id,
         movie_data.movie_title,
         movie_data.movie_genre,
@@ -20,7 +20,8 @@ async def save_ai_movie_info(movie_data: AiMovieInfo):
         movie_data.movie_nation,
         movie_data.movie_age,
         movie_data.movie_story,
-        movie_data.reg_dt
+        movie_data.movie_director,
+        # movie_data.reg_dt
     )
     return await call_db_procedure('usp_ai_movie_info_I', args)
 
