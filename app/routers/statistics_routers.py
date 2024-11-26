@@ -50,18 +50,19 @@ async def save_ai_movie_request_call(request_data: AiMovieRequest):
 
 @router.post("/response")
 async def save_ai_movie_response_call(response_data: AiMovieResponse):
+    print("save_ai_movie_response_call : {0}".format(response_data))
     args = (
         response_data.ai_request_id,
         response_data.ai_response_text,
         response_data.ai_response_time,
-        response_data.movie_title,
-        response_data.movie_year,
-        response_data.movie_genre,
-        response_data.movie_director,
-        response_data.movie_actor,
-        response_data.movie_nation,
-        response_data.movie_age,
-        response_data.movie_story,
+        # response_data.movie_title,
+        # response_data.movie_year,
+        # response_data.movie_genre,
+        # response_data.movie_director,
+        # response_data.movie_actor,
+        # response_data.movie_nation,
+        # response_data.movie_age,
+        # response_data.movie_story,
         response_data.ai_response_model,
         response_data.reg_dt,
     )

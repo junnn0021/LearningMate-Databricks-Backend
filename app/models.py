@@ -10,7 +10,7 @@ class AiMovieInfo(BaseModel):
     movie_actor: str 
     movie_year: int   
     movie_nation: str  
-    movie_age: int  
+    movie_age: str
     movie_story: str
     movie_director: str
     reg_dt: str
@@ -26,7 +26,7 @@ class AiMovieInfo(BaseModel):
                     "movie_actor": "Leonardo DiCaprio",
                     "movie_year": 2010, 
                     "movie_nation": "USA", 
-                    "movie_age": 13, 
+                    "movie_age": "13",
                     "movie_story": "공상 과학 영화",
                     "reg_dt": "2024-11-11 11:11:11",
                     "movie_director": "Christopher Nolan"
@@ -102,14 +102,14 @@ class AiMovieResponse(BaseModel):
     ai_request_id: str  # bigint NOT
     ai_response_text: str  # text
     ai_response_time: int  # int
-    movie_title: str  # varchar(45)
-    movie_year: int  # varchar(45)
-    movie_genre: str  # varchar(45)
-    movie_director: str  # varchar(45)
-    movie_actor: str  # varchar(255)
-    movie_nation: str  # varchar(45)
-    movie_age: int  # varchar(45)
-    movie_story: str  # text
+    # movie_title: str  # varchar(45)
+    # movie_year: int  # varchar(45)
+    # movie_genre: str  # varchar(45)
+    # movie_director: str  # varchar(45)
+    # movie_actor: str  # varchar(255)
+    # movie_nation: str  # varchar(45)
+    # movie_age: int  # varchar(45)
+    # movie_story: str  # text
     ai_response_model: str  # varchar(45)
     reg_dt: datetime  # datetime
 
@@ -121,14 +121,14 @@ class AiMovieResponse(BaseModel):
                     "ai_request_id": "temp",  # 추천요청 내용
                     "ai_response_text": "temp",  # 추천요청시간
                     "ai_response_time": "temp",  # 요청IP
-                    "movie_title": "temp",  # 요청IP
-                    "movie_year": "temp",  # 요청IP
-                    "movie_genre": "temp",  # 요청IP
-                    "movie_director": "temp",  # 요청IP
-                    "movie_actor": "temp",  # 요청IP
-                    "movie_nation": "temp",  # 요청IP
-                    "movie_age": "temp",  # 요청IP
-                    "movie_story": "temp",  # 요청IP
+                    # "movie_title": "temp",  # 요청IP
+                    # "movie_year": "temp",  # 요청IP
+                    # "movie_genre": "temp",  # 요청IP
+                    # "movie_director": "temp",  # 요청IP
+                    # "movie_actor": "temp",  # 요청IP
+                    # "movie_nation": "temp",  # 요청IP
+                    # "movie_age": "temp",  # 요청IP
+                    # "movie_story": "temp",  # 요청IP
                     "ai_response_model": "temp",  # 요청IP
                     "reg_dt": "temp",  # 요청IP
                 }
