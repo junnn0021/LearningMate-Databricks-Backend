@@ -46,6 +46,7 @@ async def save_ai_movie_log_call(log_data: AiMovieLog):
 
 @router.post("/request")
 async def save_ai_movie_request_call(request_data: AiMovieRequest):
+    print("request_data : {0}".format(request_data))
     return save_ai_movie_request_call_procedure(request_data)
 
 @router.post("/response")

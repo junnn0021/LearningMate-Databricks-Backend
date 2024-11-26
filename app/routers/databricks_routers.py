@@ -1,11 +1,14 @@
-from fastapi import APIRouter, Request
+from fastapi import FastAPI,APIRouter, Request
 from app.translate import translate_naveropenapi
 from app.ai.ai_serve import serve_completion
 from fastapi.responses import JSONResponse
+from fastapi.testclient import TestClient
 from app.routers.statistics_routers import *
 import json
 import re
+import requests
 
+app = FastAPI()
 router = APIRouter(
     prefix="/databricks",
 )
@@ -75,8 +78,8 @@ async def ai_serve(request: Request):
     if re.search(r"영화", request_msg):
         try:
             ## DB 넣을 AI 연결
-            # completion_result_db = text_contest  ## DB에 넣는 목적의 데이터로 변환
-            completion_result_db = serve_completion(request_msg, 1)  ## DB에 넣는 목적의 데이터로 변환
+            completion_result_db = text_contest  ## DB에 넣는 목적의 데이터로 변환
+            # completion_result_db = serve_completion(request_msg, 1)  ## DB에 넣는 목적의 데이터로 변환
             print("DB에 데이터 넣는 목적 AI 결과 : {0}".format(completion_result_db))
 
             # JSON 데이터를 파싱하여 변수에 저장
@@ -84,15 +87,17 @@ async def ai_serve(request: Request):
             response_data = json.loads(response_split_json, strict=False)
             print("response_data : {0}".format(response_data))
 
+            # ai_movie_request 테이블에 데이터 저장
+            ai_movie_request_result_id = await ai_movie_request(request_msg, request_ip)
 
             # ai_movie_response 테이블에 데이터 저장
-            response_id = await save_ai_movie_response(response_data)
-
-            # ai_movie_info 테이블에 데이터 저장
-            await save_ai_movie_info(response_data, response_id)
-
-            # ai_movie_request 테이블에 데이터 저장
-            await ai_movie_request(request_msg, request_ip)
+            response_id = await save_ai_movie_response(response_data, ai_movie_request_result_id)
+            #
+            # # ai_movie_info 테이블에 데이터 저장
+            # await save_ai_movie_info(response_data, response_id)
+            #
+            # # ai_movie_request 테이블에 데이터 저장
+            # await ai_movie_request(request_msg, request_ip)
 
         except Exception as e:
             return JSONResponse(content={"message": e}, status_code=404)
@@ -112,14 +117,19 @@ async def ai_serve(request: Request):
 
 # ai_movie_request 테이블에 데이터 저장
 async def ai_movie_request(param_request_msg, param_request_ip):
+    print("param_request_msg : {0}".format(param_request_msg))
+    print("param_request_ip : {0}".format(param_request_ip))
 
     movie_data = AiMovieRequest(
         ai_request_text=param_request_msg,
         request_ip=param_request_ip
     )
+    response = await save_ai_movie_request_call(movie_data)
+    response_body = response.body.decode('utf-8')
+    response_data = json.loads(response_body)
+    print("response : {0}".format(str(response_data.get("result_id"))))
 
-    print("post_request_data : {0}".format(movie_data))
-    await save_ai_movie_request_call(movie_data)
+    return response_data.get("result_id")
 
 
 # save_ai_movie_info 테이블에 데이터 저장
@@ -147,6 +157,7 @@ async def save_ai_movie_info(data, response_id):
 # ai_movie_info 테이블에 데이터 자장
 async def save_ai_movie_response(data):
     print("save_ai_movie_response : {0}".format(data))
+
     movie_data = AiMovieResponse(
         ai_request_id=data['ai_request_id'],
         ai_response_text=data['ai_response_text'],
@@ -155,4 +166,9 @@ async def save_ai_movie_response(data):
         reg_dt=datetime.now().isoformat()  # 문자열로 변환
     )
 
-    return await save_ai_movie_response_call(movie_data)
+    response = await save_ai_movie_response_call(movie_data)
+    response_body = response.body.decode('utf-8')
+    response_data = json.loads(response_body)
+    print("response : {0}".format(str(response_data.get("result_id"))))
+
+    return response_data.get("result_id")

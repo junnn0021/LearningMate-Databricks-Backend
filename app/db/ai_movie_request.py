@@ -46,10 +46,13 @@ def save_ai_movie_request_call_procedure(request_data: AiMovieRequest):
                 'ai_movie.usp_ai_movie_request_I', 
                 (request_data.ai_request_text, request_data.request_ip, 0)
             )
-            result = cursor.fetchall()
-            print("save_ai_movie_request_call_procedure 성공 결과: {0}".format(result))
+            # OUT 매개변수 읽기
+            cursor.execute("SELECT @result_id := LAST_INSERT_ID();")
+            result_id = cursor.fetchone()[0]
+
+            print("save_ai_movie_request_call_procedure 성공 결과: {0}".format(result_id))
         connection.commit()
-        return JSONResponse(content={"message": "Request saved successfully"}, status_code=200)
+        return JSONResponse(content={"result_id": result_id, "message": "Request saved successfully"}, status_code=200)
     except Exception as e:
         print("save_ai_movie_request_call_procedure 예외처리 : {0}".format(e))
         return JSONResponse(content={"error": str(e)}, status_code=500)
