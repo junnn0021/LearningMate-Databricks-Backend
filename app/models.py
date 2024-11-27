@@ -24,7 +24,7 @@ class AiMovieInfo(BaseModel):
                     "movie_title": "Inception",
                     "movie_genre": "SF",
                     "movie_actor": "Leonardo DiCaprio",
-                    "movie_year": 2010, 
+                    "movie_year": 2010,
                     "movie_nation": "USA", 
                     "movie_age": "13",
                     "movie_story": "공상 과학 영화",
@@ -99,7 +99,7 @@ class AiMovieRequest(BaseModel):
 class AiMovieResponse(BaseModel):
     ai_response_id: Optional[int] = Field(default=None)
     # ai_response_id: int  # bigint NOT
-    ai_request_id: str  # bigint NOT
+    ai_request_id: int  # bigint NOT
     ai_response_text: str  # text
     ai_response_time: int  # int
     # movie_title: str  # varchar(45)
@@ -111,7 +111,7 @@ class AiMovieResponse(BaseModel):
     # movie_age: int  # varchar(45)
     # movie_story: str  # text
     ai_response_model: str  # varchar(45)
-    reg_dt: datetime  # datetime
+    # reg_dt: datetime  # datetime
 
     model_config = {
         "json_schema_extra": {
@@ -130,7 +130,7 @@ class AiMovieResponse(BaseModel):
                     # "movie_age": "temp",  # 요청IP
                     # "movie_story": "temp",  # 요청IP
                     "ai_response_model": "temp",  # 요청IP
-                    "reg_dt": "temp",  # 요청IP
+                    # "reg_dt": "temp",  # 요청IP
                 }
             ]
         }

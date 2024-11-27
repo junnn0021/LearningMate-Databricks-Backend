@@ -9,11 +9,12 @@ async def call_db_procedure(procedure_name: str, args: Tuple[Any, ...]) -> JSONR
         try:
             with connection.cursor() as cursor:
                 cursor.callproc(procedure_name, args)
-                result = cursor.fetchall()
-                print("result : {0}".format(result))
+                cursor.execute("SELECT @result_id := LAST_INSERT_ID();")
+                result_id = cursor.fetchone()[0]
+                print("result : {0}".format(result_id))
             connection.commit()
             return JSONResponse(
-                content={"code": 1, "message": "Request was successfully", "data": result}
+                content={"code": 1, "message": "Request was successfully", "result_id": result_id}
             )
         except Exception as e:
             print(" 예외처리 : {0}".format(e))

@@ -9,7 +9,7 @@ router = APIRouter(
 )
 
 @router.post("/info")
-async def save_ai_movie_info(movie_data: AiMovieInfo):
+async def save_ai_movie_info_call(movie_data: AiMovieInfo):
     args = (
         # movie_data.ai_movie_info_id,
         movie_data.ai_movie_response_id,
@@ -46,12 +46,10 @@ async def save_ai_movie_log_call(log_data: AiMovieLog):
 
 @router.post("/request")
 async def save_ai_movie_request_call(request_data: AiMovieRequest):
-    print("request_data : {0}".format(request_data))
     return save_ai_movie_request_call_procedure(request_data)
 
 @router.post("/response")
 async def save_ai_movie_response_call(response_data: AiMovieResponse):
-    print("save_ai_movie_response_call : {0}".format(response_data))
     args = (
         response_data.ai_request_id,
         response_data.ai_response_text,
@@ -65,7 +63,7 @@ async def save_ai_movie_response_call(response_data: AiMovieResponse):
         # response_data.movie_age,
         # response_data.movie_story,
         response_data.ai_response_model,
-        response_data.reg_dt,
+        0
     )
     return await call_db_procedure('ai_movie.usp_ai_movie_response_I', args)
 
