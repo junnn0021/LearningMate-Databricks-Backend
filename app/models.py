@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel, Field  
 
 class AiMovieInfo(BaseModel):
-    ai_movie_info_id: int
+    ai_movie_info_id: Optional[int] = Field(default=None)
     ai_movie_response_id: int 
     movie_title: str 
     movie_genre: str 
@@ -19,7 +19,7 @@ class AiMovieInfo(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "ai_movie_info_id": 1,
+                    "ai_movie_info_id": None,
                     "ai_movie_response_id": 1,  
                     "movie_title": "Inception",
                     "movie_genre": "SF",

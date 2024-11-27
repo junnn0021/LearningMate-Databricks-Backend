@@ -4,6 +4,7 @@ from app.db.ai_movie_request import *
 
 from app.routers import databricks_routers
 from app.routers import statistics_routers
+from app.routers import databricks_routers_rkh
 from fastapi.middleware.cors import CORSMiddleware
 
 # 환경변수 세팅 (.env 파일생성필요)
@@ -14,6 +15,7 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 app = FastAPI()
 app.include_router(databricks_routers.router)
 app.include_router(statistics_routers.router)
+app.include_router(databricks_routers_rkh.router)
 
 app.add_middleware(
     CORSMiddleware,
