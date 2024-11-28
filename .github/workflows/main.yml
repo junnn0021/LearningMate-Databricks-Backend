@@ -29,22 +29,22 @@ jobs:
         shell: bash
 
       - name: Test SSH connection
-        run: ssh -o StrictHostKeyChecking=no ec2-user@13.125.222.143 "echo 'SSH connection successful'"
+        run: ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUB_IP }} "echo 'SSH connection successful'"
         env:
-          EC2_PUB_IP: 13.125.222.143
+          EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
         shell: bash
 
       - name: Copy files to temp directory via scp
-        run: scp -r -o StrictHostKeyChecking=no $(pwd)/* ec2-user@13.125.222.143:/home/ec2-user/
+        run: scp -r -o StrictHostKeyChecking=no $(pwd)/* ec2-user@${{ secrets.EC2_PUB_IP }}:/home/ec2-user/
         env:
-          EC2_PUB_IP: 13.125.222.143
+          EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
         shell: bash
 
       - name: Move files to target directory with sudo
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@13.125.222.143 << 'EOF'
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUB_IP }} << 'EOF'
             sudo cp -r /home/ec2-user/* /data001/fastapi/
           EOF
         env:
-          EC2_PUB_IP: 13.125.222.143
+          EC2_PUB_IP: ${{ secrets.EC2_PUB_IP }}
         shell: bash
