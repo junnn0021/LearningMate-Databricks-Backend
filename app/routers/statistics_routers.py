@@ -1,5 +1,6 @@
 from app.db.ai_movie_request import save_ai_movie_request_call_procedure
 from app.db.call_db_procedure import call_db_procedure
+from app.db.call_db_procedure import call_db_procedure_return
 from app.models import *
 from fastapi import APIRouter
 
@@ -65,7 +66,7 @@ async def save_ai_movie_response_call(response_data: AiMovieResponse):
         response_data.ai_response_model,
         0
     )
-    return await call_db_procedure('ai_movie.usp_ai_movie_response_I', args)
+    return await call_db_procedure_return('ai_movie.usp_ai_movie_response_I', args)
 
 @router.post("/review")
 async def save_movie_review_call(review_data: AiMovieResponseReview):
