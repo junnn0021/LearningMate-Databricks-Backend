@@ -1,12 +1,12 @@
-from fastapi import FastAPI, APIRouter, Request
+from fastapi import FastAPI,APIRouter, Request
 from app.translate import translate_naveropenapi
 from app.ai.ai_serve import serve_completion
 from fastapi.responses import JSONResponse
 from fastapi.testclient import TestClient
 from app.routers.statistics_routers import *
+
 import json
 import re
-import inspect
 import requests
 
 app = FastAPI()
@@ -14,26 +14,13 @@ router = APIRouter(
     prefix="/databricks",
 )
 
-
-@router.get("/question")
+@router.get("/health")
 async def question():
-    return {"msg:this is databricks question"}
+    return {"msg:success health check"}
 
 
-@router.post("/question2")
-async def question2():
-    return {"msg:this is databricks question2"}
-
-
-# AI server
 @router.post("/ai")
 async def ai_serve(request: Request):
-    data = await request.json()
-    request_msg = data.get("request")
-    request_ip = data.get("request_ip")
-    print("넣고자 하는 msg: {0}, 넣고자 하는 ip {1}".format(request_msg, request_ip))
-
-# 테스트 용 더미데이터
     text_contest = '''
     Here are 2 SF movie recommendations in plain text format and JSON object format:
 
@@ -76,104 +63,78 @@ async def ai_serve(request: Request):
   }
 ]
 ```
-    '''
-
+    '''    
+    # data = await request.json()
+    # # print(f"data: {data}") #  {'request': '경훈 액션 영화 추천 부탁해', 'request_ip': '127.0.0.1'}
+    # request_msg = data.get("request")
+    # request_ip = data.get("request_ip")
+    request_msg="영화 2편 추천해줘"
+    request_ip="127.1.1"
     if re.search(r"영화", request_msg):
         try:
-            ## 테스트 용 더미데이터
-            completion_result_db = text_contest  ## DB에 넣는 목적의 데이터로 변환
-            # completion_result_db = serve_completion(request_msg, 1)  ## DB에 넣는 목적의 데이터로 변환
-            print("DB에 데이터 넣는 목적 AI 결과 : {0}".format(completion_result_db))
-
-            # JSON 데이터를 파싱하여 변수에 저장
-            response_split_json = completion_result_db.split("```")[1].split("```")[0].strip()
+            # completion_result_db = serve_completion(request_msg, 1) # 데이터 브릭스 API 호출하기
+            text_plain = text_contest.split("**JSON Object Format:**")[0].strip()
+            response_split_json = text_contest.split("```")[1].split("```")[0].strip() # 테스트 데이터 서용
             response_data = json.loads(response_split_json, strict=False)
-            print("response_data : {0}".format(response_data))
 
-            # ai_movie_request 테이블에 데이터 저장
-            ai_movie_request_result_id = await ai_movie_request(request_msg, request_ip)
 
-            # ai_movie_response 테이블에 데이터 저장
-            response_id = await save_ai_movie_response(completion_result_db, ai_movie_request_result_id)
+            # 1. ai_movie_request 테이블에 데이터 저장
+            ai_movie_request = AiMovieRequest(
+                ai_request_text=request_msg,
+                request_ip=request_ip
+            )
+            req_response = await save_ai_movie_request_call(ai_movie_request)
+            req_response_data = json.loads(req_response.body.decode('utf-8'))
+            ai_movie_req_result_id = str(req_response_data.get("result_id"))
+            print(f"ai_movie_req_result_id: {ai_movie_req_result_id}")
+            
 
-            # ai_movie_info 테이블에 데이터 저장
-            await save_ai_movie_info(response_data, response_id)
+            # 2.ai_movie_response 테이블에 데이터 저장
+            ai_movie_response = AiMovieResponse(
+                ai_request_id=ai_movie_req_result_id,
+                ai_response_text=text_contest,
+                ai_response_time=99,
+                ai_response_model='llama3.1',
+            )
+            # print(f"ai_movie_response\n:{ai_movie_response}")
+            res_response = await save_ai_movie_response_call(ai_movie_response)
+            dict_response_data = json.loads(res_response.body.decode('utf-8'))
+            ai_movie_res_result_id = str(dict_response_data.get("result_id"))
+            print(f"ai_movie_res_result_id: {ai_movie_res_result_id}")
+            # print(response_data)
 
-            # # ai_movie_request 테이블에 데이터 저장
-            # await ai_movie_request(request_msg, request_ip)
 
+            # 3.ai_movie_info 테이블에 데이터 저장
+            for movie in response_data:
+                movie_data = AiMovieInfo(
+                    ai_movie_response_id=int(ai_movie_res_result_id),
+                    movie_title=translate_naveropenapi(source="en", target="ko", sentence=movie['title']),
+                    movie_genre=translate_naveropenapi(source="en", target="ko", sentence=movie['genre']),
+                    movie_actor=translate_naveropenapi(source="en", target="ko", sentence=movie['actors']),
+                    movie_year=int(movie['year']),
+                    movie_nation=translate_naveropenapi(source="en", target="ko", sentence=movie['nation']),
+                    movie_director=translate_naveropenapi(source="en", target="ko", sentence=movie['director']),
+                    movie_age=movie['recommended_age'],
+                    movie_story=translate_naveropenapi(source="en", target="ko", sentence=movie['plot']),
+                    reg_dt=datetime.now().isoformat()
+                )
+                response = await save_ai_movie_info_call(movie_data)
+                response_data = json.loads(response.body.decode('utf-8'))
+                print("response : {0}".format(str(response_data.get("result_id"))))
+
+            print(str(response_data.get("result_id")))
+            
         except Exception as e:
             return JSONResponse(content={"message": e}, status_code=404)
 
     try:
         ## Front 단으로 넘길 AI 연결
-        completion_result_front = serve_completion(request_msg, 2)  ## Front 단으로 전송하기 위한 데이터로 변환
-        completion_result_front_ko = translate_naveropenapi(source="en", target="ko", sentence=completion_result_front)
+        #completion_result_front = serve_completion(request_msg, 2)  ## Front 단으로 전송하기 위한 데이터로 변환
+        completion_result_front_ko = translate_naveropenapi(source="en", target="ko", sentence=text_plain)
         print("front에 반환하는 목적 AI 결과 : {0}".format(completion_result_front_ko))
 
     except Exception as e:
         return JSONResponse(status_code=404, content={"result": e})
 
-    return JSONResponse(status_code=200, content={"result": text_contest})
-    ## 임시 주석
-    return JSONResponse(status_code=200, content={"result": request_test_contxt})
-
-
-# ai_movie_request 테이블에 데이터 저장
-async def ai_movie_request(param_request_msg, param_request_ip):
-    print("param_request_msg : {0}, param_request_ip : {1}".format(param_request_msg, param_request_ip))
-
-    movie_data = AiMovieRequest(
-        ai_request_text=param_request_msg,
-        request_ip=param_request_ip
-    )
-    response = await save_ai_movie_request_call(movie_data)
-    response_body = response.body.decode('utf-8')
-    response_data = json.loads(response_body)
-    print("response : {0}".format(str(response_data.get("result_id"))))
-
-    return response_data.get("result_id")
-
-
-# save_ai_movie_info 테이블에 데이터 저장
-async def save_ai_movie_info(data, response_id):
-    for movie in data:
-        movie_data = AiMovieInfo(
-            ai_movie_info_id=11,  # 필수 필드 추가
-            ai_movie_response_id=int(response_id),
-            movie_title=translate_naveropenapi(source="en", target="ko", sentence=movie['title']),
-            movie_genre=translate_naveropenapi(source="en", target="ko", sentence=movie['genre']),
-            movie_actor=translate_naveropenapi(source="en", target="ko", sentence=movie['actors']),
-            movie_year=int(movie['year']),
-            movie_nation=translate_naveropenapi(source="en", target="ko", sentence=movie['nation']),
-            movie_director=translate_naveropenapi(source="en", target="ko", sentence=movie['director']),
-            movie_age=movie['recommended_age'],
-            # movie_age= int(movie['recommended_age'].replace("+", "")),
-            movie_story=translate_naveropenapi(source="en", target="ko", sentence=movie['plot']),
-            reg_dt=datetime.now().isoformat()  # 문자열로 변환
-        )
-        response = await save_ai_movie_info_call(movie_data)
-        response_body = response.body.decode('utf-8')
-        response_data = json.loads(response_body)
-        print("response : {0}".format(str(response_data.get("result_id"))))
-
-    return response_data.get("result_id")
-
-
-# ai_movie_info 테이블에 데이터 자장
-async def save_ai_movie_response(front_result_msg, ai_movie_request_result_id):
-    print("save_ai_movie_response : {0}".format(front_result_msg))
-
-    movie_data = AiMovieResponse(
-        ai_request_id=ai_movie_request_result_id,
-        ai_response_text=front_result_msg,
-        ai_response_time=11,
-        ai_response_model='llama3.1',
-    )
-
-    response = await save_ai_movie_response_call(movie_data)
-    response_body = response.body.decode('utf-8')
-    response_data = json.loads(response_body)
-    print("response : {0}".format(str(response_data.get("result_id"))))
-
-    return response_data.get("result_id")
+    return JSONResponse(status_code=200, content={"result": completion_result_front_ko})        
+    
