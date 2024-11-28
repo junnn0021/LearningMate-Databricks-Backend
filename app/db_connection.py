@@ -4,10 +4,10 @@ import os
 
 def get_db_connection():
     connection = pymysql.connect(
-        host=os.environ["MYSQL_HOST"],
+        host=os.environ["HOST"],
         port=int(os.environ["PORT"]),
-        user=os.environ["MYSQL_USER"],
-        password=os.environ["MYSQL_PASSWORD"],
-        database=os.environ["MYSQL_DATABASE"],
+        user=os.environ["USER"],
+        password=os.environ["PASSWORD"],
+        database=os.environ["DATABASE"],
     )
     return connection
